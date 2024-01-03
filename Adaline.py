@@ -2,44 +2,46 @@ from GeneralModel import NoEqualLenerror, GeneralModel
 import numpy as np
 import random
 
-class Perceptron(GeneralModel):
+class Adaline(GeneralModel):
     def __init__(self, weight_num) -> None:
         super().__init__()
         self.weight_num = weight_num
-        self.weights = np.zeros(self.weight_num+1) 
-        for i in range(self.weight_num+1):
-            self.weights[i] = random.random()
+        self.weights = np.random.rand(self.weight_num+1)
         
-    def forward(self, x):
+    def forward(self, x) -> float:
         """ x is input"""
         x = np.array(x)
         x = np.append(x, 1)
         if len(x) != len(self.weights):
             raise NoEqualLenerror()
         
-        return self.ThresholdFun(sum(x*self.weights))
+        return self.Sigmoid(sum(x*self.weights))
     
     def predict(self, TestData):
         ans = []
         for batch in range(TestData.shape[0]):
-            model_output = self.forward(TestData[batch])
-            ans.append(int(model_output))
+            model_output = self.ThresholdFun(self.forward(TestData[batch]))
+            ans.append(model_output)
         
         return np.array(ans)
-    
+
     def UpdateModelWeight(self, data, loss, lr, y_output, y_true) -> None:
         for weight_pos in range(self.weight_num):
-            self.weights[weight_pos] += lr*loss*data[weight_pos]
+            gd = self.gradient(y_true, y_output, data[weight_pos])
+            self.weights[weight_pos] -= lr*gd
     
     def loss(self, y_true, y_output) -> float:
-        return y_true - y_output
-            
+        return 1/2*(y_true - y_output)**2
+        # return y_true - y_output
+    
+    def gradient(self, y_true, y_output, x) -> float:
+        return x*(y_output-y_true)*y_output*(1-y_output)
+
+    def Sigmoid(self, x) -> float:
+        return 1/(1+np.exp(x*-1))
+
     def ThresholdFun(self, Output) -> int:
-        if Output > 0:
+        if Output > 0.5:
             return 1
         else:
             return 0
-        
-
-
-

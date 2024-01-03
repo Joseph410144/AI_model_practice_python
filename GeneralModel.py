@@ -45,12 +45,11 @@ class GeneralModel():
     def __init__(self) -> None:
         pass
 
-    def fit(self, epochs, lr, data, label, criterion) -> None:
+    def fit(self, epochs=20, lr=0.001, data=None, label=None) -> None:
         self.epochs = epochs
         self.lr = lr
         self.data = data # shape(data_numbers, data vector)
         self.label = label # shape(data_numbers, 1)
-        self.criterion = criterion
         self.loss_fig = []
 
         """ Training iteration """
@@ -58,19 +57,22 @@ class GeneralModel():
             epoch_loss = 0
             for batch in range(self.data.shape[0]):
                 model_output = self.forward(self.data[batch])
-                loss = self.criterion.loss(model_output, self.label[batch])
+                loss = self.loss(self.label[batch], model_output)
                 
-                self.UpdateModelWeight(self.data[batch], loss, self.lr)
+                self.UpdateModelWeight(self.data[batch], loss, self.lr, model_output, self.label[batch])
                 epoch_loss += loss
 
             epoch_loss /= self.data.shape[0]
             self.loss_fig.append(abs(epoch_loss))
             print(f"Epoch {epoch}| loss = {abs(epoch_loss)}")
-        
-    def UpdateModelWeight(self, data, loss, lr) -> None:
+    
+    def UpdateModelWeight(self, data, loss, lr, y_output, y_true) -> None:
         pass
     
     def forward(self) -> None:
+        pass
+    
+    def loss(self) -> None:
         pass
 
     def PlotLossStep(self):
