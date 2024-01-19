@@ -1,8 +1,8 @@
 from Perceptron import Perceptron
 from Adaline import Adaline
-from GeneralModel import TrainingModel
-from LossFunction import VectorSubtraction_Loss
-import matplotlib.pyplot as plt
+from MutilayerPerceptron import MutilayerPerceptron
+from Metric import Accuracy
+
 import numpy as np
 
 def Dataset(path):
@@ -27,24 +27,20 @@ def Dataset(path):
     f.close
 
     return np.array(Traindata), np.array(Labeldata)
-    
-def Accuracy(y_label, y_output):
-    ans = list(y_label == y_output)
-    Acc = ans.count(True)/len(ans)
 
-    return round(Acc, 2)*100
 
 def main() -> None:
     # model = Perceptron(weight_num=4)
-    model = Adaline(weight_num=4)
+    # model = Adaline(weight_num=4)
+    model = MutilayerPerceptron(input_num=4, weight_num=4)
     lr = 0.001
     Datapath = r"Dataset\Iris\irisdata.txt"
     train_data, label_data = Dataset(Datapath)
-    model.fit(epochs=1000, lr=lr, data=train_data, label=label_data)
+    model.fit(epochs=500, lr=lr, data=train_data, label=label_data)
     model.PlotLossStep()
-    output = model.predict(train_data)
-
-    print(f"Model Accuracy: {Accuracy(label_data, output)}%")
+    model.PlotAccStep()
+    # output = model.predict(train_data)
+    # print(f"Model Accuracy: {Accuracy(label_data, output)}%")
 
 
 

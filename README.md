@@ -1,4 +1,5 @@
 # AI_model_practice_python
+All the model solve binary classification question
 
 GeneralModel
 ===============

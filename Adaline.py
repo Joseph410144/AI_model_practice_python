@@ -17,7 +17,7 @@ class Adaline(GeneralModel):
         
         return self.Sigmoid(sum(x*self.weights))
     
-    def predict(self, TestData):
+    def predict(self, TestData) -> np.ndarray:
         ans = []
         for batch in range(TestData.shape[0]):
             model_output = self.ThresholdFun(self.forward(TestData[batch]))
@@ -29,6 +29,11 @@ class Adaline(GeneralModel):
         for weight_pos in range(self.weight_num):
             gd = self.gradient(y_true, y_output, data[weight_pos])
             self.weights[weight_pos] -= lr*gd
+        
+        """ update bias """
+        gd = self.gradient(y_true, y_output, 1)
+        self.weights[-1] -= lr*gd
+
     
     def loss(self, y_true, y_output) -> float:
         return 1/2*(y_true - y_output)**2

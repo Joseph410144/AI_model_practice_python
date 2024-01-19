@@ -6,11 +6,9 @@ class Perceptron(GeneralModel):
     def __init__(self, weight_num) -> None:
         super().__init__()
         self.weight_num = weight_num
-        self.weights = np.zeros(self.weight_num+1) 
-        for i in range(self.weight_num+1):
-            self.weights[i] = random.random()
+        self.weights = np.random.rand(self.weight_num+1)
         
-    def forward(self, x):
+    def forward(self, x) -> int:
         """ x is input"""
         x = np.array(x)
         x = np.append(x, 1)
@@ -19,7 +17,7 @@ class Perceptron(GeneralModel):
         
         return self.ThresholdFun(sum(x*self.weights))
     
-    def predict(self, TestData):
+    def predict(self, TestData) -> np.ndarray:
         ans = []
         for batch in range(TestData.shape[0]):
             model_output = self.forward(TestData[batch])

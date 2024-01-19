@@ -1,3 +1,4 @@
+from Metric import Accuracy
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -48,9 +49,10 @@ class GeneralModel():
     def fit(self, epochs=20, lr=0.001, data=None, label=None) -> None:
         self.epochs = epochs
         self.lr = lr
-        self.data = data # shape(data_numbers, data vector)
+        self.data = data # shape(data_numbers, data features)
         self.label = label # shape(data_numbers, 1)
         self.loss_fig = []
+        self.acc_fig = []
 
         """ Training iteration """
         for epoch in range(self.epochs):
@@ -63,8 +65,11 @@ class GeneralModel():
                 epoch_loss += loss
 
             epoch_loss /= self.data.shape[0]
+            epoch_ans = Accuracy(self.label, self.predict(self.data))
             self.loss_fig.append(abs(epoch_loss))
-            print(f"Epoch {epoch}| loss = {abs(epoch_loss)}")
+            self.acc_fig.append(epoch_ans)
+
+            print(f"Epoch {epoch}| loss = {round(abs(epoch_loss), 10)}| Acc = {epoch_ans}")
     
     def UpdateModelWeight(self, data, loss, lr, y_output, y_true) -> None:
         pass
@@ -74,10 +79,20 @@ class GeneralModel():
     
     def loss(self) -> None:
         pass
+    
+    def predict(self, TestData) -> np.ndarray:
+        pass
 
-    def PlotLossStep(self):
+    def PlotLossStep(self) -> None:
         plt.plot(self.loss_fig)
         plt.title("Loss step")
         plt.xlabel("Epoch")
         plt.ylabel("loss")
+        plt.show()
+    
+    def PlotAccStep(self) -> None:
+        plt.plot(self.acc_fig)
+        plt.title("Accuracy step")
+        plt.xlabel("Epoch")
+        plt.ylabel("Accuracy")
         plt.show()
